@@ -2,10 +2,9 @@
 namespace App\Entity;
 enum StateComment: string
 {
-    /* case inactive = "INACTIVE";
-    case unverified = "UNVERIFIED";
-    case verified = "VERIFIED";
-    case reported = "REPORTED"; */
+    case toValidate = "TO VALIDATE";
+    case reported = "REPORTED";
+    case archived = "ARCHIVED";
 
     //Enumérer les état des avis à rentrer
 }
