@@ -5,25 +5,21 @@ namespace App\Entity;
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-class Post
+#[ApiResource]
+class Post //*Annonces*//
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $id_post = null;
-
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Plant $plant_id_FK = null;
-
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?Seed $seed_id_FK = null;
+    private ?Product $product_id_FK = null;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
@@ -33,12 +29,18 @@ class Post
     private ?\DateTimeInterface $created_at = null;
 
     /* Type = ENUM = plant or seed */
-    #[ORM\Column(length: 255)]
-    private ?string $type = null;
+    //#[ORM\Column(length: 255)]
+    //private ?string $type = null;
+    #[ORM\Column(type: "string", enumType: TypePost::class)]
+    private TypePost $type;
 
-    #[ORM\Column(length: 255)]
-    private ?string $state = null;
+    /* State = ENUM = unpublished, published, traded, deleted, refused */
+    //#[ORM\Column(length: 255)]
+    //private ?string $state = null;
+    #[ORM\Column(type: "string", enumType: StatePost::class)]
+    private StatePost $state;
 
+    /* If the post has been validated by an admin */
     #[ORM\Column]
     private ?bool $validated = null;
 
@@ -47,55 +49,33 @@ class Post
 
     public function __construct()
     {
+        $this->state = StatePost::unpublished;
+        $this->state = TypePost::plant;
         $this->comments = new ArrayCollection();
     }
-
-    public function getId(): ?int
+//* Id
+    public function getIdPost(): ?int
     {
         return $this->id;
     }
 
-    public function getIdPost(): ?int
+//* FK Product
+    public function getPlantIdFK(): ?Product
     {
-        return $this->id_post;
+        return $this->product_id_FK;
     }
-
-    public function setIdPost(int $id_post): self
+    public function setPlantIdFK(?Product $product_id_FK): self
     {
-        $this->id_post = $id_post;
+        $this->product_id_FK = $product_id_FK;
 
         return $this;
     }
 
-    public function getPlantIdFK(): ?Plant
-    {
-        return $this->plant_id_FK;
-    }
-
-    public function setPlantIdFK(?Plant $plant_id_FK): self
-    {
-        $this->plant_id_FK = $plant_id_FK;
-
-        return $this;
-    }
-
-    public function getSeedIdFK(): ?Seed
-    {
-        return $this->seed_id_FK;
-    }
-
-    public function setSeedIdFK(?Seed $seed_id_FK): self
-    {
-        $this->seed_id_FK = $seed_id_FK;
-
-        return $this;
-    }
-
+//* FK User
     public function getUserIdFK(): ?User
     {
         return $this->user_id_FK;
     }
-
     public function setUserIdFK(?User $user_id_FK): self
     {
         $this->user_id_FK = $user_id_FK;
@@ -103,11 +83,11 @@ class Post
         return $this;
     }
 
+//* Created at
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
-
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
@@ -115,11 +95,11 @@ class Post
         return $this;
     }
 
-    public function getType(): ?string
+//* Type
+    public function getType(): ?TypePost
     {
         return $this->type;
     }
-
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -127,11 +107,11 @@ class Post
         return $this;
     }
 
-    public function getState(): ?string
+//* State
+    public function getState(): ?StatePost
     {
         return $this->state;
     }
-
     public function setState(string $state): self
     {
         $this->state = $state;
@@ -139,6 +119,7 @@ class Post
         return $this;
     }
 
+//* Validated
     public function setValidated(string $validated): self
     {
         $this->validated = $validated;
@@ -146,6 +127,7 @@ class Post
         return $this;
     }
 
+//* Comment table Link
     /**
      * @return Collection<int, Comment>
      */
@@ -153,17 +135,14 @@ class Post
     {
         return $this->comments;
     }
-
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
             $this->comments->add($comment);
             $comment->setPostIdFK($this);
         }
-
         return $this;
     }
-
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
@@ -172,7 +151,6 @@ class Post
                 $comment->setPostIdFK(null);
             }
         }
-
         return $this;
     }
 }

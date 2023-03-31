@@ -3,19 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
-class Comment
+#[ApiResource]
+class Comment //*Commentaire sur une annonce*//
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private ?int $id_comment;
 
-    #[ORM\Column]
-    private ?int $id_comment = null;
-
+    /*Nullable if user line has been deleted*/
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $editor_id_FK = null;
@@ -24,27 +24,18 @@ class Comment
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post_id_FK = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $state = null;
+    /* State = ENUM = inactive, unverified, verified, reported */
+    //#[ORM\Column(length: 255)]
+    //private ?string $state = null;
+    #[ORM\Column(type: "string", enumType: StateComment::class)]
+    private StateComment $state;
 
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getIdComment(): ?int
     {
         return $this->id_comment;
-    }
-
-    public function setIdComment(int $id_comment): self
-    {
-        $this->id_comment = $id_comment;
-
-        return $this;
     }
 
     public function getEditorIdFK(): ?User
@@ -71,7 +62,7 @@ class Comment
         return $this;
     }
 
-    public function getState(): ?string
+    public function getState(): ?StateComment
     {
         return $this->state;
     }
