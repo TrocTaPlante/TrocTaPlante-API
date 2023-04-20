@@ -19,7 +19,7 @@ class Reporting
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $Date = null;
 
-    //* Source - ENUM = post, comment, review
+    //* Source - ENUM = post, message, review
     #[ORM\Column(type: "string", enumType: SourceReporting::class)]
     private SourceReporting $source;
 
@@ -50,7 +50,7 @@ class Reporting
         return $this;
     }
 
-//* Source - ENUM = post, comment, review
+//* Source - ENUM = post, message, review
     public function getSource(): SourceReporting
     {
         return $this->source;
@@ -60,7 +60,7 @@ class Reporting
         $this->source = $source;
         return $this;
     }
-    //*id from Post, Comment or Review depend on "source" field
+    //*id from Post, Message or Review depend on "source" field
     public function getSourceId(): ?int
     {
         return $this->source_id;

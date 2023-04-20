@@ -44,14 +44,14 @@ class Post //*Annonces*//
     #[ORM\Column]
     private ?bool $validated = null;
 
-    #[ORM\OneToMany(mappedBy: 'post_id_FK', targetEntity: Comment::class, orphanRemoval: true)]
-    private Collection $comments;
+    #[ORM\OneToMany(mappedBy: 'post_id_FK', targetEntity: Message::class, orphanRemoval: true)]
+    private Collection $messages;
 
     public function __construct()
     {
         $this->state = StatePost::unpublished;
         $this->state = TypePost::plant;
-        $this->comments = new ArrayCollection();
+        $this->messages = new ArrayCollection();
     }
 //* Id
     public function getIdPost(): ?int
@@ -127,28 +127,28 @@ class Post //*Annonces*//
         return $this;
     }
 
-//* Comment table Link
+//* Message table Link
     /**
-     * @return Collection<int, Comment>
+     * @return Collection<int, Message>
      */
-    public function getComments(): Collection
+    public function getMessages(): Collection
     {
-        return $this->comments;
+        return $this->messages;
     }
-    public function addComment(Comment $comment): self
+    public function addMessage(Message $message): self
     {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setPostIdFK($this);
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setPostIdFK($this);
         }
         return $this;
     }
-    public function removeComment(Comment $comment): self
+    public function removeMessage(Message $message): self
     {
-        if ($this->comments->removeElement($comment)) {
+        if ($this->messages->removeElement($message)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getPostIdFK() === $this) {
-                $comment->setPostIdFK(null);
+            if ($message->getPostIdFK() === $this) {
+                $message->setPostIdFK(null);
             }
         }
         return $this;

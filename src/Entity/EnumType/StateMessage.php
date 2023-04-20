@@ -1,6 +1,6 @@
 <?php
 namespace App\Entity;
-enum StateComment: string
+enum StateMessage: string
 {
     case toValidate = "TO VALIDATE";
     case reported = "REPORTED";

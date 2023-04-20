@@ -72,8 +72,8 @@ class User //*Utilisateur*//
     #[ORM\OneToMany(mappedBy: 'user_id_FK', targetEntity: Post::class, orphanRemoval: true)]
     private Collection $posts;
 
-    #[ORM\OneToMany(mappedBy: 'editor_id_FK', targetEntity: Comment::class, orphanRemoval: true)]
-    private Collection $comments;
+    #[ORM\OneToMany(mappedBy: 'editor_id_FK', targetEntity: Message::class, orphanRemoval: true)]
+    private Collection $messages;
 
     #[ORM\OneToMany(mappedBy: 'user_id_FK', targetEntity: Review::class)]
     private Collection $reviews;
@@ -81,7 +81,7 @@ class User //*Utilisateur*//
     public function __construct()
     {
         $this->posts = new ArrayCollection();
-        $this->comments = new ArrayCollection();
+        $this->messages = new ArrayCollection();
         $this->role = RoleUser::anonymous;
         $this->reviews = new ArrayCollection();
     }
@@ -311,28 +311,28 @@ public function setStreetNumber(?string $street_number): self
     return $this;
 }
 
-//* FK Comment
+//* FK Message
     /**
-     * @return Collection<int, Comment>
+     * @return Collection<int, Message>
      */
-    public function getComments(): Collection
+    public function getMessages(): Collection
     {
-        return $this->comments;
+        return $this->messages;
     }
-    public function addComment(Comment $comment): self
+    public function addMessage(Message $message): self
     {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setEditorIdFK($this);
+        if (!$this->messages->contains($message)) {
+            $this->messages->add($message);
+            $message->setEditorIdFK($this);
         }
         return $this;
     }
-    public function removeComment(Comment $comment): self
+    public function removeMessage(Message $message): self
     {
-        if ($this->comments->removeElement($comment)) {
+        if ($this->messages->removeElement($message)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getEditorIdFK() === $this) {
-                $comment->setEditorIdFK(null);
+            if ($message->getEditorIdFK() === $this) {
+                $message->setEditorIdFK(null);
             }
         }
         return $this;

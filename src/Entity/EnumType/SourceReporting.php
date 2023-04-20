@@ -3,6 +3,6 @@ namespace App\Entity;
 enum SourceReporting: string
 {
     case post = "POST";
-    case comment = "COMMENT";
+    case message = "MESSAGE";
     case review = "REVIEW";
 }
