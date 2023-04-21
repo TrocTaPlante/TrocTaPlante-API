@@ -51,6 +51,11 @@ class Product
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $vernaculary_name = null;
+/* CONSTRUCTOR */
+    public function __construct()
+    {
+        $this->state = StatePlant::adult;
+    }
 
 //* Id
     public function getIdPlant(): ?int

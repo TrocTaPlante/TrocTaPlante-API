@@ -1,14 +1,16 @@
 <?php
 namespace App\Entity;
+use App\Config\StateMessage;
+
 
 use App\Repository\MessageRepository;
 use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 #[ApiResource]
 class Message //*Message between*//
-//TODO changer les commentaires en message avec FK user pour l'éditeur et le recepteur + FK post pour lier la messagerie à une annonce spécifiques
 //TODO tester les groups
 //TODO continuer vidéo https://www.youtube.com/watch?v=PLBYYe435qo&list=PLjwdMgw5TTLU7DcDwEt39EvPBi9EiJnF4&index=3
 // symfony serve pour allumer et tester le serveur
@@ -23,6 +25,11 @@ class Message //*Message between*//
     #[ORM\JoinColumn(nullable: false)]
     private ?User $editor_id_FK = null;
 
+    /*Nullable if user line has been deleted*/
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $receptor_id_FK = null;
+
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Post $post_id_FK = null;
@@ -31,10 +38,16 @@ class Message //*Message between*//
     //#[ORM\Column(length: 255)]
     //private ?string $state = null;
     #[ORM\Column(type: "string", enumType: StateMessage::class)]
-    private StateMessage $state;
+    public StateMessage $state;
 
     #[ORM\Column(length: 255)]
     private ?string $content = null;
+
+/* CONSTRUCTOR */
+    public function __construct()
+    {
+        $this->state = StateMessage::toValidate;
+    }
 
     public function getIdMessage(): ?int
     {
@@ -53,6 +66,18 @@ class Message //*Message between*//
         return $this;
     }
 
+    public function getReceptorIdFK(): ?User
+    {
+        return $this->receptor_id_FK;
+    }
+
+    public function setReceptorIdFK(?User $receptor_id_FK): self
+    {
+        $this->receptor_id_FK = $receptor_id_FK;
+
+        return $this;
+    }
+
     public function getPostIdFK(): ?Post
     {
         return $this->post_id_FK;
@@ -65,7 +90,7 @@ class Message //*Message between*//
         return $this;
     }
 
-    public function getState(): ?StatMessage
+    public function getState(): ?StateMessage
     {
         return $this->state;
     }

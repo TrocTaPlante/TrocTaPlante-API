@@ -33,6 +33,13 @@ class Reporting
     #[ORM\Column]
     private ?int $source_id = null;
 
+/* CONSTRUCTOR */
+    public function __construct()
+    {
+        $this->source = SourceReporting::post;
+        $this->reason = ReasonReporting::misspelling;
+    }
+
 //* Id
     public function getId(): ?int
     {

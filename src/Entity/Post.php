@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Entity;
+//use App\Entity\EnumType\TypePost;
+use App\Config\TypePost;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 
 use App\Repository\PostRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,12 +13,12 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PostRepository::class)]
-#[ApiResource]
 class Post //*Annonces*//
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    //#[Groups(['read:collection'])]
     private ?int $id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -26,31 +29,35 @@ class Post //*Annonces*//
     private ?User $user_id_FK = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    //#[Groups(['read:collection'])]
     private ?\DateTimeInterface $created_at = null;
 
     /* Type = ENUM = plant or seed */
     //#[ORM\Column(length: 255)]
     //private ?string $type = null;
     #[ORM\Column(type: "string", enumType: TypePost::class)]
-    private TypePost $type;
+    //#[Groups(['read:collection'])]
+    public TypePost $type;
 
     /* State = ENUM = unpublished, published, traded, deleted, refused */
     //#[ORM\Column(length: 255)]
     //private ?string $state = null;
     #[ORM\Column(type: "string", enumType: StatePost::class)]
-    private StatePost $state;
+    //#[Groups(['read:collection'])]
+    public StatePost $state;
 
     /* If the post has been validated by an admin */
     #[ORM\Column]
     private ?bool $validated = null;
 
     #[ORM\OneToMany(mappedBy: 'post_id_FK', targetEntity: Message::class, orphanRemoval: true)]
-    private Collection $messages;
+    //#[Groups(['read:collection'])]
+    public Collection $messages;
 
     public function __construct()
     {
         $this->state = StatePost::unpublished;
-        $this->state = TypePost::plant;
+        $this->type = TypePost::plant;
         $this->messages = new ArrayCollection();
     }
 //* Id

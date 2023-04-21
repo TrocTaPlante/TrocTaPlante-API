@@ -36,6 +36,12 @@ class Review //*Avis sur un troqueur*//
     #[ORM\Column(type: "string", enumType: StatePost::class)]
     private StatePost $state;
 
+/* CONSTRUCTOR */
+    public function __construct()
+    {
+        $this->state = StatePost::unpublished;
+    }
+
 //* Id
     public function getIdReview(): ?int
     {
