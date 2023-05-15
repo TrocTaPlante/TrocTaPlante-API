@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Entity\Product;
+use App\Entity\User;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class Serialize

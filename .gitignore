@@ -7,26 +7,18 @@
 /public/bundles/
 /var/
 /vendor/
+###< symfony/framework-bundle ###
 
-# Assets and user uploads
-/web/bundles/
-/web/uploads/
-
-# PHPUnit
-/app/phpunit.xml
+###> phpunit/phpunit ###
 /phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
 
-# Build data
-/build/
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
 
-# Composer PHAR
-/composer.phar
-
-# Backup entities generated with doctrine:generate:entities command
-**/Entity/*~
-
-# Embedded web-server pid file
-/.web-server-pid
-.env
-.env.local
-.env
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
