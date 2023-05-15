@@ -39,6 +39,51 @@ class ProductRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAllWithUser(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p', 'u', 'g')
+            ->leftJoin('p.user', 'u')
+            ->leftJoin('p.genus', 'g')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function updateProduct(Product $product): int
+    {
+
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->update()
+            ->set('p.quantity', ':quantity')
+            ->set('p.state', ':state')
+            ->set('p.height', ':height')
+            ->set('p.pot_height', ':pot_height')
+            ->set('p.pot_width', ':pot_width')
+            ->set('p.species', ':species')
+            ->where('p.id = :id')
+            ->setParameter('id', $product->getId())
+            ->setParameter('quantity', $product->getQuantity())
+            ->setParameter('state', $product->getState())
+            ->setParameter('height', $product->getHeight())
+            ->setParameter('pot_height', $product->getPotHeight())
+            ->setParameter('pot_width', $product->getPotWidth())
+            ->setParameter('species', $product->getSpecies());
+
+        $query = $queryBuilder->getQuery();
+        return $query->execute();
+    }
+
+    public function findBySearchQuery(string $searchQuery, int $limit = 10): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.species LIKE :searchQuery')
+            ->setParameter('searchQuery', '%' . $searchQuery . '%')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Product[] Returns an array of Product objects
 //     */
