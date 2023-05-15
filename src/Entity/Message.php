@@ -1,96 +1,75 @@
 <?php
-namespace App\Entity;
-use App\Config\StateMessage;
 
+namespace App\Entity;
 
 use App\Repository\MessageRepository;
-use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
-#[ApiResource]
-class Message //*Message between*//
-//TODO tester les groups
-//TODO continuer vidéo https://www.youtube.com/watch?v=PLBYYe435qo&list=PLjwdMgw5TTLU7DcDwEt39EvPBi9EiJnF4&index=3
-// symfony serve pour allumer et tester le serveur
+class Message
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id_message;
+    private ?int $id = null;
 
-    /*Nullable if user line has been deleted*/
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $editor_id_FK = null;
+    #[ORM\ManyToOne(inversedBy: 'messages_sended')]
+    private ?User $editor = null;
 
-    /*Nullable if user line has been deleted*/
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $receptor_id_FK = null;
+    #[ORM\ManyToOne(inversedBy: 'messages_received')]
+    private ?User $receptor = null;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Post $post_id_FK = null;
+    private ?Post $post = null;
 
-    /* State = ENUM = inactive, unverified, verified, reported */
-    //#[ORM\Column(length: 255)]
-    //private ?string $state = null;
-    #[ORM\Column(type: "string", enumType: StateMessage::class)]
-    public StateMessage $state;
+    #[ORM\Column(length: 255)]
+    private ?string $state = null;
 
     #[ORM\Column(length: 255)]
     private ?string $content = null;
 
-/* CONSTRUCTOR */
-    public function __construct()
+    public function getId(): ?int
     {
-        $this->state = StateMessage::toValidate;
+        return $this->id;
     }
 
-    public function getIdMessage(): ?int
+    public function getEditor(): ?User
     {
-        return $this->id_message;
+        return $this->editor;
     }
 
-    public function getEditorIdFK(): ?User
+    public function setEditor(?User $editor): self
     {
-        return $this->editor_id_FK;
-    }
-
-    public function setEditorIdFK(?User $editor_id_FK): self
-    {
-        $this->editor_id_FK = $editor_id_FK;
+        $this->editor = $editor;
 
         return $this;
     }
 
-    public function getReceptorIdFK(): ?User
+    public function getReceptor(): ?User
     {
-        return $this->receptor_id_FK;
+        return $this->receptor;
     }
 
-    public function setReceptorIdFK(?User $receptor_id_FK): self
+    public function setReceptor(?User $receptor): self
     {
-        $this->receptor_id_FK = $receptor_id_FK;
+        $this->receptor = $receptor;
 
         return $this;
     }
 
-    public function getPostIdFK(): ?Post
+    public function getPost(): ?Post
     {
-        return $this->post_id_FK;
+        return $this->post;
     }
 
-    public function setPostIdFK(?Post $post_id_FK): self
+    public function setPost(?Post $post): self
     {
-        $this->post_id_FK = $post_id_FK;
+        $this->post = $post;
 
         return $this;
     }
 
-    public function getState(): ?StateMessage
+    public function getState(): ?string
     {
         return $this->state;
     }

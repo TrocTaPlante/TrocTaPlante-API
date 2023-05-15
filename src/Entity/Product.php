@@ -3,165 +3,174 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
-use ApiPlatform\Metadata\ApiResource;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    public ?int $id = null;
 
     #[ORM\Column]
-    private ?int $quantity = null;
+    public ?int $quantity = null;
 
-    //*type = ENUM = Plant, Seed */
-    #[ORM\Column(type: "string", enumType: TypeProduct::class)]
-    private TypeProduct $type;
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    public ?Genus $genus = null;
 
-    //*genus for Plant & Seed */
-   #[ORM\ManyToOne(inversedBy: 'genus')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Genus $genus_id_FK;
-
-    /* #[ORM\Column(length: 255)]
-    private ?string $genus = null;  */
-
-    //*state, height, with_pot, pot_height for Plant ONLY */
-    /*state = ENUM = sprout, cutting, baby, adult */
-    #[ORM\Column(type: "string", nullable: true, enumType: StatePlant::class)]
-    private StatePlant $state;
-
-    /* Express in centimeter (cm) */
-    #[ORM\Column(nullable: true)]
-    private ?int $height = null;
+    #[ORM\Column(length: 255)]
+    public ?string $state = null;
 
     #[ORM\Column]
-    private ?bool $with_pot = null;
+    public ?int $height = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $pot_height = null;
+    #[ORM\Column]
+    public ?int $pot_width = null;
 
-    //*species & vernaculary_name for Plant & Seed */
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $species = null;
+    #[ORM\Column]
+    public ?int $pot_height = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $vernaculary_name = null;
-/* CONSTRUCTOR */
+    #[ORM\Column(length: 255)]
+    public ?string $species = null;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    public ?User $user = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $created_at = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $updated_at = null;
+
     public function __construct()
     {
-        $this->state = StatePlant::adult;
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
     }
 
-//* Id
-    public function getIdPlant(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-//* Quantity
     public function getQuantity(): ?int
     {
         return $this->quantity;
     }
+
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
-        return $this;
-    }
-
-//* Type - Plant or Seed
-    public function getType(): TypeProduct
-    {
-        return $this->type;
-    }
-    public function setType(): TypeProduct
-    {
-        return $this->type;
-    }
-
-//*Genus
-    public function getGenus():Genus
-    {
-        return $this->genus_id_FK;
-    }
-    public function setGenus(string $genus_id_FK): self
-    {
-        $this->genus_id_FK = $genus_id_FK;
 
         return $this;
     }
 
-//* Height - Plant Only
-    public function getHeight(): ?int
+    public function getGenus(): ?Genus
     {
-        return $this->height;
+        return $this->genus;
     }
-    public function setHeight(?int $height): self
+
+    public function setGenus(?Genus $genus): self
     {
-        $this->height = $height;
+        $this->genus = $genus;
 
         return $this;
     }
 
-//* State = ENUM = sprout, cutting, baby, adult */
-    public function getState(): ?StatePlant
+    public function getState(): ?string
     {
         return $this->state;
     }
-    public function setState(?string $state): self
+
+    public function setState(string $state): self
     {
         $this->state = $state;
 
         return $this;
     }
 
-//* Pot - Plant Only
-    public function isWithPot(): ?bool
+    public function getHeight(): ?int
     {
-        return $this->with_pot;
+        return $this->height;
     }
-    public function setWithPot(bool $with_pot): self
+
+    public function setHeight(int $height): self
     {
-        $this->with_pot = $with_pot;
+        $this->height = $height;
 
         return $this;
     }
+
+    public function getPotWidth(): ?int
+    {
+        return $this->pot_width;
+    }
+
+    public function setPotWidth(int $pot_width): self
+    {
+        $this->pot_width = $pot_width;
+
+        return $this;
+    }
+
     public function getPotHeight(): ?int
     {
         return $this->pot_height;
     }
-    public function setPotHeight(?int $pot_height): self
+
+    public function setPotHeight(int $pot_height): self
     {
         $this->pot_height = $pot_height;
 
         return $this;
     }
 
-//* Species - Plant & Seed
     public function getSpecies(): ?string
     {
         return $this->species;
     }
-    public function setSpecies(?string $species): self
+
+    public function setSpecies(string $species): self
     {
         $this->species = $species;
 
         return $this;
     }
 
-//*Vernaculary Name - Plant & Seed
-    public function getVernacularyName(): ?string
+    public function getUser(): ?User
     {
-        return $this->vernaculary_name;
+        return $this->user;
     }
-    public function setVernacularyName(?string $vernaculary_name): self
+
+    public function setUser(?User $user): self
     {
-        $this->vernaculary_name = $vernaculary_name;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }

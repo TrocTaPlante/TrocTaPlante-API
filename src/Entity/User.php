@@ -5,98 +5,154 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Metadata\ApiResource;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
-class User //*Utilisateur*//
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id;
+    public ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email;
-
-    #[ORM\Column(length: 255)]
-    private ?string $password_hash = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $pseudo = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $city = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $zipcode = null;
+    #[ORM\Column(length: 180, unique: true)]
+    public ?string $username = null;
 
     #[ORM\Column]
-    private ?float $latitude = null;
+    public array $roles = [];
 
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column]
-    private ?float $longitude = null;
-
-    /* Role = ENUM = "anonymous", "basic", "moderator", "administrator" or "super" */
-    //#[ORM\Column(length: 255)]
-    #[ORM\Column(type: "string", enumType: RoleUser::class)]
-    private RoleUser $role;
-
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    private ?\DateTimeInterface $created_at = null;
-
-    #[ORM\Column]
-    private ?bool $validated = null;
-
-    /* If the user has been bloqued by Super Admin - must be anonymized */
-    #[ORM\Column]
-    private ?bool $bloqued = null;
+    private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $street_name = null;
+    public ?string $email = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $street_number = null;
+    #[ORM\Column(length: 255)]
+    public ?string $city = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $phone = null;
+    #[ORM\Column(length: 255)]
+    public ?string $zipcode = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $firstname = null;
+    #[ORM\Column(length: 255)]
+    public ?string $latitude = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $lastname = null;
+    #[ORM\Column(length: 255)]
+    public ?string $longitude = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id_FK', targetEntity: Post::class, orphanRemoval: true)]
-    private Collection $posts;
+    #[ORM\Column]
+    public ?bool $isValidated = null;
 
-    #[ORM\OneToMany(mappedBy: 'editor_id_FK', targetEntity: Message::class, orphanRemoval: true)]
-    private Collection $messages;
+    #[ORM\Column]
+    public ?bool $isBloqued = null;
 
-    #[ORM\OneToMany(mappedBy: 'user_id_FK', targetEntity: Review::class)]
-    private Collection $reviews;
+    #[ORM\Column(length: 255)]
+    public ?string $street_name = null;
+
+    #[ORM\Column(length: 255)]
+    public ?string $street_number = null;
+
+    #[ORM\Column(length: 255)]
+    public ?string $phone = null;
+
+    #[ORM\Column(length: 255)]
+    public ?string $firstname = null;
+
+    #[ORM\Column(length: 255)]
+    public ?string $lastname = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Product::class)]
+    public Collection $products;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updated_at = null;
 
     public function __construct()
     {
-        $this->posts = new ArrayCollection();
-        $this->messages = new ArrayCollection();
-        $this->role = RoleUser::anonymous;
-        $this->reviews = new ArrayCollection();
+        $this->products = new ArrayCollection();
+        $this->isBloqued = false;
+        $this->isValidated = false;
     }
 
-//* Id
-    public function getIdUser(): ?int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-//* Email
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
     }
+
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -104,35 +160,11 @@ class User //*Utilisateur*//
         return $this;
     }
 
-//* Password
-    public function getPasswordHash(): ?string
-    {
-        return $this->password_hash;
-    }
-    public function setPasswordHash(string $password_hash): self
-    {
-        $this->password_hash = $password_hash;
-
-        return $this;
-    }
-
-//* Pseudo
-    public function getPseudo(): ?string
-    {
-        return $this->pseudo;
-    }
-    public function setPseudo(string $pseudo): self
-    {
-        $this->pseudo = $pseudo;
-
-        return $this;
-    }
-
-//* City
     public function getCity(): ?string
     {
         return $this->city;
     }
+
     public function setCity(string $city): self
     {
         $this->city = $city;
@@ -140,11 +172,11 @@ class User //*Utilisateur*//
         return $this;
     }
 
-//* Zip Code
     public function getZipcode(): ?string
     {
         return $this->zipcode;
     }
+
     public function setZipcode(string $zipcode): self
     {
         $this->zipcode = $zipcode;
@@ -152,217 +184,165 @@ class User //*Utilisateur*//
         return $this;
     }
 
-//* Latitude
-    public function getLatitude(): ?float
+    public function getLatitude(): ?string
     {
         return $this->latitude;
     }
-    public function setLatitude(float $latitude): self
+
+    public function setLatitude(string $latitude): self
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-//* Longitude
-    public function getLongitude(): ?float
+    public function getLongitude(): ?string
     {
         return $this->longitude;
     }
-    public function setLongitude(float $longitude): self
+
+    public function setLongitude(string $longitude): self
     {
         $this->longitude = $longitude;
 
         return $this;
     }
 
-//* Role - ENUM = anonymous", "basic", "moderator","administrator" or "super
-    public function getRole(): ?RoleUser
+    public function isIsValidated(): ?bool
     {
-        return $this->role;
+        return $this->isValidated;
     }
-    public function setRole(string $role): self
+
+    public function setIsValidated(bool $isValidated): self
     {
-        $this->role = $role;
+        $this->isValidated = $isValidated;
 
         return $this;
     }
 
-//* Created at
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function isIsBloqued(): ?bool
     {
-        return $this->created_at;
+        return $this->isBloqued;
     }
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+
+    public function setIsBloqued(bool $isBloqued): self
     {
-        $this->created_at = $created_at;
+        $this->isBloqued = $isBloqued;
 
         return $this;
     }
 
-//* Validated
-    public function isValidated(): ?bool
+    public function getStreetName(): ?string
     {
-        return $this->validated;
+        return $this->street_name;
     }
-    public function setValidated(bool $validated): self
+
+    public function setStreetName(string $street_name): self
     {
-        $this->validated = $validated;
+        $this->street_name = $street_name;
 
         return $this;
     }
 
-//* Bloqued
-    public function isBloqued(): ?bool
+    public function getStreetNumber(): ?string
     {
-        return $this->bloqued;
+        return $this->street_number;
     }
-    public function setBloqued(bool $bloqued): self
+
+    public function setStreetNumber(string $street_number): self
     {
-        $this->bloqued = $bloqued;
+        $this->street_number = $street_number;
 
         return $this;
     }
 
-//* Phone
     public function getPhone(): ?string
     {
         return $this->phone;
     }
-    public function setPhone(?string $phone): self
+
+    public function setPhone(string $phone): self
     {
         $this->phone = $phone;
 
         return $this;
     }
 
-//* Firstname
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
-    public function setFirstname(?string $firstname): self
+
+    public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
 
         return $this;
     }
 
-//* Lastname
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
-    public function setLastname(?string $lastname): self
+
+    public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
 
         return $this;
     }
 
-//* FK Post
     /**
-     * @return Collection<int, Post>
+     * @return Collection<int, Product>
      */
-    public function getPosts(): Collection
+    public function getProducts(): Collection
     {
-        return $this->posts;
+        return $this->products;
     }
-    public function addPost(Post $post): self
+
+    public function addProduct(Product $product): self
     {
-        if (!$this->posts->contains($post)) {
-            $this->posts->add($post);
-            $post->setUserIdFK($this);
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setUser($this);
         }
 
         return $this;
     }
-    public function removePost(Post $post): self
+
+    public function removeProduct(Product $product): self
     {
-        if ($this->posts->removeElement($post)) {
+        if ($this->products->removeElement($product)) {
             // set the owning side to null (unless already changed)
-            if ($post->getUserIdFK() === $this) {
-                $post->setUserIdFK(null);
+            if ($product->getUser() === $this) {
+                $product->setUser(null);
             }
         }
 
         return $this;
     }
 
-//* Street name
-public function getStreetName(): ?string
-{
-    return $this->street_name;
-}
-public function setStreetName(string $street_name): self
-{
-    $this->street_name = $street_name;
-    return $this;
-}
-
-//* Street number
-public function getStreetNumber(): ?string
-{
-    return $this->street_number;
-}
-public function setStreetNumber(?string $street_number): self
-{
-    $this->street_number = $street_number;
-    return $this;
-}
-
-//* FK Message
-    /**
-     * @return Collection<int, Message>
-     */
-    public function getMessages(): Collection
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->messages;
+        return $this->created_at;
     }
-    public function addMessage(Message $message): self
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
-        if (!$this->messages->contains($message)) {
-            $this->messages->add($message);
-            $message->setEditorIdFK($this);
-        }
-        return $this;
-    }
-    public function removeMessage(Message $message): self
-    {
-        if ($this->messages->removeElement($message)) {
-            // set the owning side to null (unless already changed)
-            if ($message->getEditorIdFK() === $this) {
-                $message->setEditorIdFK(null);
-            }
-        }
+        $this->created_at = $created_at;
+
         return $this;
     }
 
-
-//* FK Review
-    /**
-     * @return Collection<int, Review>
-     */
-    public function getReviews(): Collection
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->reviews;
-    }    public function addReview(Review $review): self
-    {
-        if (!$this->reviews->contains($review)) {
-            $this->reviews->add($review);
-            $review->setUserIdFK($this);
-        }
-        return $this;
+        return $this->updated_at;
     }
 
-    public function removeReview(Review $review): self
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
-        if ($this->reviews->removeElement($review)) {
-            // set the owning side to null (unless already changed)
-            if ($review->getUserIdFK() === $this) {
-                $review->setUserIdFK(null);
-            }
-        }
+        $this->updated_at = $updated_at;
+
         return $this;
     }
 }
