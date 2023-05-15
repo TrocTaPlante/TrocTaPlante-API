@@ -65,7 +65,6 @@ class AdminController extends AbstractController
         }
     }
 
-    #[Route('/api/v1/admin/disableuser/{id}', methods: ['PUT'])]
     public function disableUser(UserRepository $userRepository, User $user){
         try {
             if ($this->getUser()->getRoles() !== ["ADMIN"] && $this->getUser()->getRoles() !== ["SUPERADMIN"]){

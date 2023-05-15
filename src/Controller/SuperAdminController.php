@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,5 +36,16 @@ class SuperAdminController extends AbstractController
             return new Response("Vous n'avez pas les droits pour accéder à cette ressource", 403);
         }
         return AdminController::register($request,$userRepository,$passwordHasher);
+    }
+    #[Route('/api/v1/superadmin/disableuser/{id}', methods: 'PUT')]
+    public function disableUser(Request $request, UserRepository $userRepository, User $user): Response
+    {
+        if ($this->getUser()->getRoles()[0] !== "SUPERADMIN"){
+            return new Response("Vous n'avez pas les droits pour accéder à cette ressource", 403);
+        }
+        $userToDisable = $userRepository->findOneBy(["id" => $user->getId()]);
+        $userToDisable->setIsBloqued(true);
+        $userRepository->save($userToDisable, true);
+        return new Response("L'utilisateur a bien été désactivé", 200);
     }
 }
