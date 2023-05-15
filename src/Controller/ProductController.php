@@ -32,6 +32,10 @@ class ProductController extends AbstractController
                     $product->setPotWidth($data["pot_width"]);
                     $product->setSpecies($data["species"]);
                     $product->setUser($this->getUser());
+                    $product->setLatitude($data["latitude"]);
+                    $product->setLongitude($data["longitude"]);
+                    $product->setPostStatus($data["post_status"]);
+                    $product->setDescription($data["description"]);
                     break;
                 case "2": //Graine
                     $product->setQuantity($data["quantity"]);
@@ -41,6 +45,10 @@ class ProductController extends AbstractController
                     $product->setPotHeight($data["pot_height"]);
                     $product->setSpecies($data["species"]);
                     $product->setUser($this->getUser());
+                    $product->setLatitude($data["latitude"]);
+                    $product->setLongitude($data["longitude"]);
+                    $product->setPostStatus($data["post_status"]);
+                    $product->setDescription($data["description"]);
                     break;
             }
 

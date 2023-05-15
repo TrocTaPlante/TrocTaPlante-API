@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Entity\Conversation;
 use App\Entity\Product;
 use App\Entity\User;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -26,6 +27,10 @@ class Serialize
             'species',
             'createdAt',
             'updatedAt',
+            'latitude',
+            'longitude',
+            'PostStatus',
+            'Description',
             'user' => [
                 'id',
                 'username',
@@ -72,6 +77,44 @@ class Serialize
             'street_number',
             'createdAt',
             'updatedAt'
+        ]]);
+    }
+
+    public static function serializeConversation(SerializerInterface $serializer, array | Conversation $conversation){
+        return $serializer->normalize($conversation, null, ['attributes' => [
+            'id',
+            'receiver',
+            'sender' => [
+                'id',
+                'username',
+                'roles',
+                'email',
+                'firstName',
+                'lastName',
+                'address',
+                'city',
+                'zipcode',
+                'phone',
+                'longitude',
+                'latitude',
+                'isValidated',
+                'isBloqued',
+                'street_name',
+                'street_number',
+                'createdAt',
+                'updatedAt'
+            ],
+            'createdAt',
+            'messages' => [
+                'id',
+                'state',
+                'content',
+                'createdAt',
+                'updatedAt',
+                'sender',
+                'receiver',
+                'conversation'
+            ]
         ]]);
     }
 }

@@ -14,15 +14,6 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages_sended')]
-    private ?User $editor = null;
-
-    #[ORM\ManyToOne(inversedBy: 'messages_received')]
-    private ?User $receptor = null;
-
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    private ?Post $post = null;
-
     #[ORM\Column(length: 255)]
     private ?string $state = null;
 
@@ -35,45 +26,25 @@ class Message
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    private ?User $sender = null;
+
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    private ?User $receiver = null;
+
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    private ?Conversation $conversation = null;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+        $this->state = "UNREAD";
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getEditor(): ?User
-    {
-        return $this->editor;
-    }
-
-    public function setEditor(?User $editor): self
-    {
-        $this->editor = $editor;
-
-        return $this;
-    }
-
-    public function getReceptor(): ?User
-    {
-        return $this->receptor;
-    }
-
-    public function setReceptor(?User $receptor): self
-    {
-        $this->receptor = $receptor;
-
-        return $this;
-    }
-
-    public function getPost(): ?Post
-    {
-        return $this->post;
-    }
-
-    public function setPost(?Post $post): self
-    {
-        $this->post = $post;
-
-        return $this;
     }
 
     public function getState(): ?string
@@ -130,5 +101,41 @@ class Message
     public function setUpdatedAt(?\DateTimeInterface $updated_at): void
     {
         $this->updated_at = $updated_at;
+    }
+
+    public function getSender(): ?User
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?User $sender): self
+    {
+        $this->sender = $sender;
+
+        return $this;
+    }
+
+    public function getReceiver(): ?User
+    {
+        return $this->receiver;
+    }
+
+    public function setReceiver(?User $receiver): self
+    {
+        $this->receiver = $receiver;
+
+        return $this;
+    }
+
+    public function getConversation(): ?Conversation
+    {
+        return $this->conversation;
+    }
+
+    public function setConversation(?Conversation $conversation): self
+    {
+        $this->conversation = $conversation;
+
+        return $this;
     }
 }
