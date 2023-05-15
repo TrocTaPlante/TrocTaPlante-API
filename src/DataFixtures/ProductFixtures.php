@@ -35,6 +35,10 @@ class ProductFixtures extends Fixture implements OrderedFixtureInterface
             $product->setUser($this->userRepository->findOneBy(["id" => rand(1, 4)]));
             $product->setCreatedAt(new \DateTimeImmutable());
             $product->setUpdatedAt(new \DateTimeImmutable());
+            $product->setLongitude("2.3488" . $i);
+            $product->setLatitude("48.8534" . $i);
+            $product->setPostStatus("ONLINE");
+            $product->setDescription("Description du produit " . $i);
             $manager->persist($product);
         }
 

@@ -44,6 +44,18 @@ class Product
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $longitude = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $latitude = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $PostStatus = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $Description = null;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -171,6 +183,54 @@ class Product
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?string
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(string $longitude): self
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?string
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(string $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getPostStatus(): ?string
+    {
+        return $this->PostStatus;
+    }
+
+    public function setPostStatus(string $PostStatus): self
+    {
+        $this->PostStatus = $PostStatus;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+
+    public function setDescription(string $Description): self
+    {
+        $this->Description = $Description;
 
         return $this;
     }

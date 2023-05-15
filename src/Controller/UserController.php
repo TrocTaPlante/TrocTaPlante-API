@@ -58,6 +58,20 @@ class UserController extends AbstractController
         }
     }
 
+    public static function disableUser(UserRepository $userRepository, User $user): JsonResponse
+    {
+        try {
+            $user->setIsBloqued(true);
+            $userRepository->save($user, true);
+
+            $message = "Le compte de l'utilisateur " . $user->getUsername() . " a été bloqué";
+            return new JsonResponse($message, 200, ["Content-Type" => "application/json"]);
+
+        }catch (\Exception $exception){
+            $errorMessage = $exception->getMessage();
+            return new JsonResponse($errorMessage, 500, ["Content-Type" => "application/json"]);
+        }
+    }
     #[Route('/api/v1/getuserinfo', methods: "GET")]
     public function getUserInfo(Request $request, UserRepository $userRepository, SerializerInterface $serializer){
         try {
