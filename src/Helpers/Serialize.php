@@ -27,6 +27,10 @@ class Serialize
             'species',
             'createdAt',
             'updatedAt',
+            'latitude',
+            'longitude',
+            'PostStatus',
+            'Description',
             'user' => [
                 'id',
                 'username',
