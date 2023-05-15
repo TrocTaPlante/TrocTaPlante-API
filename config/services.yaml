@@ -6,10 +6,6 @@
 parameters:
 
 services:
-    #_instanceof for add EnumType in Doctrine
-    #_instanceof:
-    #    App\DoctrineType\AbstractEnumType:
-    #        tags: ['app.doctrine_enum_type']
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
