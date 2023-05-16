@@ -81,14 +81,16 @@ class ProductController extends AbstractController
     }
 
     #[Route('/api/v1/product/{id}', methods: 'PUT')]
-    public function updateProduct(Request $request, Product $product, ProductRepository $productRepository): JsonResponse
+    public function updateProduct(Request $request, Product $product, ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
         try {
             $userId = $this->getUser()->getId();
             $productCreatorId = $product->getUser()->getId();
 
-            if($userId != $productCreatorId){
-                return new JsonResponse("Vous n'avez pas les droits pour modifier ce produit", 403);
+            if ($this->getUser()->getRoles()[0] == "USER") {
+                if ($userId != $productCreatorId) {
+                    return new JsonResponse("Vous n'avez pas les droits pour modifier ce produit", 403);
+                }
             }
 
             $formData = json_decode($request->getContent(), true);
@@ -105,7 +107,7 @@ class ProductController extends AbstractController
                 return new JsonResponse("Le produit n'a pas été modifié", 304, ["Content-Type" => "application/json"]);
             }
 
-            $updatedProduct = $productRepository->findOneBy(["id" => $product->getId()]);
+            $updatedProduct = Serialize::serializeProduct($serializer, $productRepository->findOneBy(["id" => $product->getId()]));
 
             return new JsonResponse($updatedProduct, 200, ["Content-Type" => "application/json"]);
         }catch (Exception $exception){

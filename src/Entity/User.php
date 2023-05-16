@@ -87,6 +87,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isValidated = false;
         $this->conversations = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
