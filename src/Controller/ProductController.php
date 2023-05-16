@@ -122,13 +122,25 @@ class ProductController extends AbstractController
             $userId = $this->getUser()->getId();
             $productCreatorId = $product->getUser()->getId();
 
-            if($userId != $productCreatorId){
-                return new JsonResponse("Vous n'avez pas les droits pour supprimer ce produit", 403);
+            if ($this->getUser()->getRoles()[0] == "USER") {
+                if ($userId != $productCreatorId) {
+                    return new JsonResponse("Vous n'avez pas les droits pour modifier ce produit", 403);
+                }
             }
 
             $productRepository->remove($product, true);
 
             return new JsonResponse("Le produit a été supprimé avec succès", 200, ["Content-Type" => "application/json"]);
+        }catch (Exception $exception){
+            return new JsonResponse($exception->getMessage(), 500);
+        }
+    }
+
+    #[Route('/api/product/{id}', methods: 'GET')]
+    public function getOneProduct(Product $product, SerializerInterface $serializer): JsonResponse
+    {
+        try {
+            return new JsonResponse(Serialize::serializeProduct($serializer, $product), 200, ["Content-Type" => "application/json"]);
         }catch (Exception $exception){
             return new JsonResponse($exception->getMessage(), 500);
         }
