@@ -1,7 +1,7 @@
 FROM php:8.2-cli
 RUN apt update
-RUN apt install -y git 
-RUN docker-php-ext-install pdo pdo_mysql
+RUN apt install -y git curl zip unzip libcurl4-openssl-dev libzip-dev
+RUN docker-php-ext-install pdo pdo_mysql curl zip
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 WORKDIR /root

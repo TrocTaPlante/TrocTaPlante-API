@@ -8,6 +8,11 @@ services:
       dockerfile: docker/php/Dockerfile
     ports:
       - 80:8000
+    depends_on:
+      - database
+    #Commandes à lancer quand le conteneur est démarré, ici les migrations et les fausses données
+    command: "symfony console --no-interaction doctrine:migrations:migrate && symfony console --no-interaction doctrine:fixtures:load"
+
   database:
     container_name: database
     image: mysql:8.0
@@ -20,6 +25,7 @@ services:
       MYSQL_DATABASE: troctaplante
       MYSQL_USER: dev
       MYSQL_PASSWORD: dev
+
 networks:
   net_web:
     name: net_web
