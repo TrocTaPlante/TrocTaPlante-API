@@ -3,15 +3,13 @@ services:
     container_name: api
     networks:
       - net_web
-    build:
-      context: .
-      dockerfile: docker/php/Dockerfile
+    image: ghcr.io/gregory-lebl/troc-ta-plante-api:dev
     ports:
       - 80:8000
     depends_on:
       - database
     #Commandes à lancer quand le conteneur est démarré, ici les migrations et les fausses données
-    command: "symfony console --no-interaction doctrine:migrations:migrate && symfony console --no-interaction doctrine:fixtures:load"
+    #command: "symfony console --no-interaction doctrine:migrations:migrate && symfony console --no-interaction doctrine:fixtures:load"
 
   database:
     container_name: database
