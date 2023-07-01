@@ -15,11 +15,13 @@ services:
       - database
     links:
       - database
+    restart: always
     #Commandes à lancer quand le conteneur est démarré, ici les migrations et les fausses données
     #command: "symfony console --no-interaction doctrine:migrations:migrate && symfony console --no-interaction doctrine:fixtures:load"
 
   database:
     container_name: database
+    restart: always
     image: mysql:8.0
     networks:
       - net_web
