@@ -8,6 +8,8 @@ services:
       - 80:8000
     depends_on:
       - database
+    links:
+      - database
     #Commandes à lancer quand le conteneur est démarré, ici les migrations et les fausses données
     #command: "symfony console --no-interaction doctrine:migrations:migrate && symfony console --no-interaction doctrine:fixtures:load"
 
