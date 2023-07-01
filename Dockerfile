@@ -15,7 +15,7 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
 # Setup project
-WORKDIR /app
+WORKDIR /var/www/html/
 COPY . .
 RUN composer install
 RUN symfony console lexik:jwt:generate-keypair
