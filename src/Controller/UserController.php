@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class UserController extends AbstractController
 {
@@ -21,13 +22,14 @@ class UserController extends AbstractController
         return new JsonResponse('pong', 200, ["Content-Type" => "application/json"]);
     }
     #[Route('/api/v1/register', methods: "POST")]
-    public static function register(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): JsonResponse
+    public static function register(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, HttpClientInterface $httpClient): JsonResponse
     {
         try {
             $data = json_decode($request->getContent(), true);
 
             $address = $data["street_number"] . " " . $data["street_name"] . ", " . $data["zipcode"] . " " . $data["city"];
-            $coordinates = Location::getGPSCoordinatesFromPostalAddress($address);
+            $locationHelper = new Location($httpClient);
+            $coordinates = $locationHelper->getGPSCoordinatesFromPostalAddress($address);
 
             $user = new User();
 

@@ -40,7 +40,7 @@ class UserFixtures extends Fixture implements OrderedFixtureInterface
         $manager->flush();
     }
 
-    public function getOrder()
+    public function getOrder(): int
     {
         //Indique dans quel ordre les fixtures doivent être chargées
         return 1;
