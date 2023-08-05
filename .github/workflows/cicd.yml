@@ -73,3 +73,5 @@ jobs:
 
       - name: Run PHPUnit Tests
         run: php bin/phpunit
+        env:
+          DATABASE_URL: mysql://dev:dev@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/troctaplante
