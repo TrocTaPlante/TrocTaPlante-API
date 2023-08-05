@@ -25,3 +25,4 @@
 
 /.env.docker
 /docker/mysql/data/*
+.DS_Store
