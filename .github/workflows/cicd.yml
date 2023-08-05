@@ -69,7 +69,7 @@ jobs:
           php bin/console doctrine:database:create --if-not-exists
           php bin/console doctrine:migrations:migrate || echo "No migrations found or migration failed"
         env:
-          DATABASE_URL: mysql://dev:dev@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/troctaplante
+          DATABASE_URL: mysql://dev:dev@mysql:${{ job.services.mysql.ports['3306'] }}/troctaplante
 
       - name: Run PHPUnit Tests
         run: php bin/phpunit
