@@ -62,8 +62,8 @@ jobs:
       - name: Lancement des tests unitaires
         run: php bin/phpunit
         env:
-          DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante`
-  
+          DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
+
   build-docker:
     needs: tests-unitaires
     name: Création de l'image Docker
