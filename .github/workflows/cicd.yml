@@ -5,7 +5,7 @@ on:
     branches: [ develop ]
 
 jobs:
-  tests:
+  tests-unitaires:
     name: Tests Unitaires
     runs-on: ubuntu-22.04
     # Permet d'utiliser une base de données pour les tests 
@@ -62,4 +62,27 @@ jobs:
       - name: Lancement des tests unitaires
         run: php bin/phpunit
         env:
-          DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
+          DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante`
+  
+  build-docker:
+    needs: tests-unitaires
+    name: Création de l'image Docker
+    runs-on: ubuntu-22.04 #Mettre ubuntu-latest revient au même
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Login to Github Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      - name: Build and Push Docker images to Github Registry
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ghcr.io/troctaplante/troctatlante-api:develop
