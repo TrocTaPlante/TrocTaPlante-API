@@ -17,8 +17,9 @@ RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 # Setup project
 WORKDIR /var/www/html/
 COPY . .
-RUN APP_ENV=prod APP_DEBUG=0 && \ 
-    composer dump-env prod && \
+ENV APP_ENV=prod
+ENV APP_DEBUG=0
+RUN composer dump-env prod && \
     composer install --no-dev --optimize-autoloader && \
     php bin/console cache:clear
 
