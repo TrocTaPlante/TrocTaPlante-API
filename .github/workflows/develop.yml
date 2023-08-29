@@ -6,7 +6,7 @@ jobs:
   tests-unitaires:
     name: Tests Unitaires
     runs-on: ubuntu-22.04
-    # Permet d'utiliser une base de données pour les tests
+    #  Permet d'utiliser une base de données pour les tests
     services:
       mysql:
         image: mysql:8.0
