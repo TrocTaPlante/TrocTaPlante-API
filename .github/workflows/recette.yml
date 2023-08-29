@@ -63,9 +63,9 @@ jobs:
           DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
 
   build-docker:
-    environment: recette
     needs: tests-unitaires
-    name: Création de l'image Docker
+    if: github.ref == 'refs/heads/recette'
+    name: Création de l'image Docker pour la recette
     runs-on: ubuntu-22.04 #Mettre ubuntu-latest revient au même
     permissions:
       contents: read
