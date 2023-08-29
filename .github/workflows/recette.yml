@@ -64,7 +64,6 @@ jobs:
 
   build-docker:
     needs: tests-unitaires
-    if: github.ref == 'refs/heads/recette'
     name: Création de l'image Docker pour la recette
     runs-on: ubuntu-22.04 #Mettre ubuntu-latest revient au même
     permissions:
