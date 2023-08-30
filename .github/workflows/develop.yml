@@ -57,6 +57,9 @@ jobs:
         env:
           DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
 
+      - name: Création de la paire de clé pour le token JWT
+        run: php bin/console lexik:jwt:generate-keypair --overwrite
+
       - name: Lancement des tests unitaires
         run: php bin/phpunit
         env:
