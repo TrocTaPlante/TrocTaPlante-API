@@ -1,12 +1,12 @@
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   tests-unitaires:
     name: Tests Unitaires
     runs-on: ubuntu-22.04
-    # Permet d'utiliser une base de données pour les tests 
+    # Permet d'utiliser une base de données pour les tests
     services:
       mysql:
         image: mysql:8.0
@@ -21,7 +21,7 @@ jobs:
 
     steps:
       # Récupération du code source
-      - name: Récupération du code source dans le container 
+      - name: Récupération du code source dans le container
         uses: actions/checkout@v2
 
       - name: Configuration de PHP
@@ -57,12 +57,16 @@ jobs:
         env:
           DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
 
+      - name: Création de la paire de clé pour le token JWT
+        run: php bin/console lexik:jwt:generate-keypair --overwrite
+
       - name: Lancement des tests unitaires
         run: php bin/phpunit
         env:
           DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
 
   build-docker:
+    if: github.ref == 'refs/heads/main'
     needs: tests-unitaires
     name: Création de l'image Docker
     runs-on: ubuntu-22.04 #Mettre ubuntu-latest revient au même

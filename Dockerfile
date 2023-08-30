@@ -17,10 +17,7 @@ RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 # Setup project
 WORKDIR /var/www/html/
 COPY . .
-ENV APP_ENV=prod
-ENV APP_DEBUG=0
-RUN composer install --no-dev --optimize-autoloader && \
-    php bin/console cache:clear
+RUN composer install && php bin/console cache:clear
 
 # Run project
 ENTRYPOINT ["bash", "./docker/php/docker.sh"]

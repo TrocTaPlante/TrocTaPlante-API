@@ -1,0 +1,13 @@
+on:
+  push:
+    branches: [recette]
+
+jobs:
+  UpdateCode:
+    name: "Mise à jour du code sur la recette"
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - run: ssh -t -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_RECETTE }} 'cd /home/ubuntu/code-api && git pull origin recette && cd && docker compose --env-file env.docker --file docker-compose.recette.yml up -d --build'
