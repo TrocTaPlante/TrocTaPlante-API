@@ -63,7 +63,7 @@ jobs:
           DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
 
   build-docker:
-    environment: production
+    if: github.ref == 'refs/heads/main'
     needs: tests-unitaires
     name: Création de l'image Docker
     runs-on: ubuntu-22.04 #Mettre ubuntu-latest revient au même

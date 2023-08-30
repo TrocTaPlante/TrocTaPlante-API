@@ -6,7 +6,7 @@ jobs:
   tests-unitaires:
     name: Tests Unitaires
     runs-on: ubuntu-22.04
-    # Permet d'utiliser une base de données pour les tests
+    #  Permet d'utiliser une base de données pour les tests
     services:
       mysql:
         image: mysql:8.0
@@ -63,9 +63,8 @@ jobs:
           DATABASE_URL: mysql://dev:dev@127.0.0.1:3306/troctaplante
 
   build-docker:
-    environment: recette
     needs: tests-unitaires
-    name: Création de l'image Docker
+    name: Création de l'image Docker pour la recette
     runs-on: ubuntu-22.04 #Mettre ubuntu-latest revient au même
     permissions:
       contents: read
