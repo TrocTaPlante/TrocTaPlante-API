@@ -1,23 +1,28 @@
 services:
+  web:
+    container_name: web
+    networks:
+      - net_web
+    image: ghcr.io/troctaplante/troctatlante-web:production
+    ports:
+      - 8000:3000
+    links:
+      - api
+    restart: always
+
   api:
     container_name: api
     networks:
       - net_web
-    image: ghcr.io/troctaplante/troctatlante-api:develop
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
-    volumes:
-      - .:/var/www/html
-    ports:
-      - 80:8000
+    # image: ghcr.io/troctaplante/troctatlante-api:recette
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - database
     links:
       - database
     restart: always
-    #Commandes à lancer quand le conteneur est démarré, ici les migrations et les fausses données
-    #command: "symfony console --no-interaction doctrine:migrations:migrate && symfony console --no-interaction doctrine:fixtures:load"
 
   database:
     container_name: database
@@ -32,8 +37,6 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - 3306:3306
 
 networks:
   net_web:

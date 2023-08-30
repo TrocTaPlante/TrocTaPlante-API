@@ -23,5 +23,5 @@ RUN composer install --no-dev --optimize-autoloader && \
     php bin/console cache:clear
 
 # Run project
-ENTRYPOINT ["bash", "./docker-entrypoint.sh"]
+ENTRYPOINT ["bash", "./docker/docker.sh"]
 EXPOSE 8000
