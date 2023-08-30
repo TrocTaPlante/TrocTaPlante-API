@@ -30,7 +30,7 @@ class UserControllerTest extends WebTestCase
             "firstname" => "Pierre",
             "lastname" => "Dupont",
             "password" => "azerty",
-            "username" => "toto",
+            "username" => "JeanPierre",
             "city" => "Rouen",
             "zipcode" => "76000",
             "street_name" => "Allée Marceau",
