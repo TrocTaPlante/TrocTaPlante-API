@@ -87,4 +87,4 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ghcr.io/troctaplante/troctatlante-api:production
+          tags: ghcr.io/troctaplante/troctaplante-api:production
