@@ -5,6 +5,7 @@ namespace App\Tests\Controllers;
 use ApiTestCase\JsonApiTestCase;
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
 class UserControllerTest extends WebTestCase
 {
     /**
@@ -47,9 +48,51 @@ class UserControllerTest extends WebTestCase
              json_encode($userData)
          );
 
-         echo $client->getResponse();
-
          $this->assertEquals(201, $client->getResponse()->getStatusCode());
 
      }
+
+    /**
+    * @test
+    */
+    public function testUserLogin()
+    {
+        $client = static::createClient();
+
+        $userData = [
+            "username" => "toto",
+            "password" => "azerty"
+        ];
+
+        $client->request(
+            'POST',
+            '/api/login_check',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode($userData)
+        );
+
+        echo $client->getResponse();
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @test
+     */
+    public function testGetUserInfoWithoutLogin(){
+        $client = static::createClient();
+
+        $client->request(
+            'GET',
+            '/api/v1/getuserinfo?username=toto',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json']
+        );
+
+        $this->assertEquals(401, $client->getResponse()->getStatusCode());
+    }
+
 }
