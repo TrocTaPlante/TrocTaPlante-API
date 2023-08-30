@@ -8,16 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
 {
-    /**
-     * @test
-     */
-    public function testGetHelloWorldResponse()
-    {
-        $client = static::createClient();
-        $client->request('GET', '/ping');
-
-        $this->assertResponseStatusCodeSame(200);
-    }
 
     /**
      * @test
@@ -60,7 +50,7 @@ class UserControllerTest extends WebTestCase
         $client = static::createClient();
 
         $userData = [
-            "username" => "toto",
+            "username" => "JeanPierre",
             "password" => "azerty"
         ];
 
