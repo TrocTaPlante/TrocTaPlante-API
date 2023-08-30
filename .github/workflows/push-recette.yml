@@ -10,4 +10,4 @@ jobs:
       - uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-      - run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_RECETTE }} -e "cd ./code-api && git pull origin recette && cd && docker compose up -d --build"
+      - run: ssh ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST_RECETTE }} -e 'cd ./code-api && git pull origin recette && cd && docker compose up -d --build'
