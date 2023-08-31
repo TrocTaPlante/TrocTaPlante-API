@@ -1,6 +1,6 @@
 on:
-  pull_request:
-    branches: [develop, recette, main]
+  push:
+    branches: [develop]
 
 jobs:
   tests-unitaires:
