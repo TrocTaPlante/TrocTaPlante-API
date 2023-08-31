@@ -13,7 +13,7 @@ class PingController extends AbstractController
     public function index(): JsonResponse
     {
         return $this->json([
-            'message' => 'pong et si tu lis ceci c\'est que tu as réussi à faire fonctionner le pipelines de déploiement continue et Docker',
+            'message' => 'pong',
         ]);
     }
 
