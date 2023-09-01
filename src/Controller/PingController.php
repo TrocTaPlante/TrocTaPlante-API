@@ -13,7 +13,7 @@ class PingController extends AbstractController
     public function index(): JsonResponse
     {
         return $this->json([
-            'message' => 'pong test soutenance',
+            'message' => 'pong',
         ]);
     }
 
